@@ -1,5 +1,4 @@
 $kind: http-request
-name: GET - Buscar Pet
 url: "{{base_url}}/pet/{{pet_id}}"
 method: GET
 body:
@@ -10,4 +9,4 @@ scripts:
     code: |
       pm.test("Status 200", () => pm.response.to.have.status(200));
     language: text/javascript
-order: 262522056150237
+order: 2000

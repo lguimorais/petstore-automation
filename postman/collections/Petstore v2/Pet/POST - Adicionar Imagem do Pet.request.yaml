@@ -1,5 +1,4 @@
 $kind: http-request
-name: POST - Adicionar Imagem do Pet
 url: "{{base_url}}/pet/{{pet_id}}/uploadImage"
 method: POST
 body:
@@ -8,16 +7,11 @@ body:
     - type: text
       key: additionalMetadata
       value: ""
-      description: ""
-      disabled: false
     - type: file
       key: ImagemPet
-      src:
-        - postman-cloud:///1f13fe7f-d0b2-4f80-b0fa-56a7804fded6
-      description: ""
-      disabled: false
+      src: postman-cloud:///1f13fe7f-d0b2-4f80-b0fa-56a7804fded6
 scripts:
   - type: afterResponse
     code: pm.test("Status 200", () => pm.response.to.have.status(200));
     language: text/javascript
-order: 2813452283937986
+order: 3000

@@ -1,5 +1,4 @@
 $kind: http-request
-name: POST - Criar Pet
 url: "{{base_url}}/pet"
 method: POST
 body:
@@ -25,7 +24,7 @@ body:
     }
 scripts:
   - type: afterResponse
-    code: |-
+    code: |
       pm.test("Status deve ser 200", () => {
           pm.response.to.have.status(200);
       });
@@ -33,12 +32,12 @@ scripts:
       pm.test("Pet criado com ID numérico", () => {
           pm.expect(json.id).to.be.a("number");
       });
+      pm.collectionVariables.set("pet_id", json.id);
       pm.test("Nome correto", () => {
           pm.expect(json.name).to.eql("doggie");
       });
       pm.test("Status do pet é available", () => {
           pm.expect(json.status).to.eql("available");
       });
-      pm.collectionVariables.set("petId", json.id);
     language: text/javascript
-order: 1776990888878
+order: 1000

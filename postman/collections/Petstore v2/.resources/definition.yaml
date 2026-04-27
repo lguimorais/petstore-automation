@@ -1,2 +1,4 @@
 $kind: collection
-name: Petstore v2
+variables:
+  petId: ""
+  pet_id: ""

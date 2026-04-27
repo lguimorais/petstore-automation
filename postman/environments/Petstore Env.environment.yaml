@@ -1,14 +1,15 @@
 name: Petstore Env
 values:
   - key: base_url
-    value: 'https://petstore.swagger.io/v2'
+    value: https://petstore.swagger.io/v2
     enabled: true
   - key: order_id
-    value: ''
+    value: ""
     enabled: true
   - key: username
-    value: ''
+    value: ""
     enabled: true
   - key: pet_id
-    value: ''
+    value: ""
     enabled: true
+color: null

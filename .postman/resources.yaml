@@ -1,10 +1,11 @@
 # Use this workspace to collaborate
 workspace:
-  id: 5fcb340e-eb7a-4a64-9a8c-0f3b571b4294
+  id: ""
 
 localResources:
   collections:
     - ../collections/Petstore_v2.postman_collection.json
+    - ../collections/Petstore v2.postman_collection.json
   environments:
     - ../environments/Petstore_Env.postman_environment.json
 
@@ -14,4 +15,5 @@ cloudResources:
   collections:
     ../postman/collections/Petstore v2: 47483218-ec297e7d-1bfc-4dbd-99bd-4c5a570db70c
   environments:
-    ../postman/environments/Petstore Env.environment.yaml: be733dc3-5a8f-4bb7-a13a-97f863935ca3
+    ../postman/environments/Petstore Env.environment.yaml: 47483218-be733dc3-5a8f-4bb7-a13a-97f863935ca3
+    ../postman/environments/New Environment.environment.yaml: 47483218-f3141272-c842-4354-bb05-778b0076b593
