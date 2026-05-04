@@ -34,7 +34,7 @@ jobs:
         run: |
           node -e "
             const fs = require('fs');
-            const env = JSON.parse(fs.readFileSync('./environments/Petstore Env.postman_environment.json', 'utf8'));
+            const env = JSON.parse(fs.readFileSync('./environments/Petstore_Env.postman_environment.json', 'utf8'));
 
             env.values = env.values.map(v => {
               if (v.key === 'special-key') v.value = '${{ secrets.PETSTORE_API_KEY }}';
@@ -48,8 +48,8 @@ jobs:
 
       - name:  Executar testes — Pasta Pet
         run: |
-          newman run ./collections/Petstore v2.postman_collection.json \
-            --environment "./environments/Petstore Env.postman_environment.json" \
+          newman run ./collections/Petstore_v2.postman_collection.json \
+            --environment "./environments/Petstore_Env.postman_environment.json" \
             --folder "Pet" \
             --reporters cli,htmlextra \
             --reporter-htmlextra-export ./reports/report-pet.html \
@@ -61,8 +61,8 @@ jobs:
 
       - name:  Executar testes — Pasta Store
         run: |
-          newman run ./collections/Petstore v2.postman_collection.json \
-            --environment "./environments/Petstore Env.postman_environment.json" \
+          newman run ./collections/Petstore_v2.postman_collection.json \
+            --environment "./environments/Petstore_Env.postman_environment.json" \
             --folder "Store" \
             --reporters cli,htmlextra \
             --reporter-htmlextra-export ./reports/report-store.html \
@@ -74,8 +74,8 @@ jobs:
 
       - name:  Executar testes — Pasta User
         run: |
-          newman run ./collections/Petstore v2.postman_collection.json \
-            --environment "./environments/Petstore Env.postman_environment.json" \
+          newman run ./collections/Petstore_v2.postman_collection.json \
+            --environment "./environments/Petstore_Env.postman_environment.json" \
             --folder "User" \
             --reporters cli,htmlextra \
             --reporter-htmlextra-export ./reports/report-user.html \
