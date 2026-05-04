@@ -1,0 +1,94 @@
+$kind: http-request
+url: "{{base_url}}/store/order"
+method: POST
+body:
+  type: json
+  content: |-
+    {
+      "id": {{order_id}},
+      "petId": {{pet_id}},
+      "quantity": {{order_quantity}},
+      "shipDate": "2026-05-02T21:42:25.203+0000",
+      "status": "{{order_status}}",
+      "complete": true
+    }
+scripts:
+  - type: afterResponse
+    code: |
+      
+
+      pm.test("Resposta está em formato JSON válido", () => {
+          pm.response.to.be.json;
+      });
+
+      pm.test("Resposta contém todos os campos obrigatórios", () => {
+          const json = pm.response.json();
+          pm.expect(json).to.have.property("id");
+          pm.expect(json).to.have.property("petId");
+          pm.expect(json).to.have.property("quantity");
+          pm.expect(json).to.have.property("status");
+          pm.expect(json).to.have.property("complete");
+      });
+
+
+      pm.test("Status do pedido é 'placed'", () => {
+          const json = pm.response.json();
+          pm.expect(json.status).to.eql("placed");
+      });
+
+      pm.test("Quantidade do pedido está correta", () => {
+          const json = pm.response.json();
+          pm.expect(json.quantity).to.eql(pm.environment.get("order_quantity"));
+      });
+
+
+      pm.test("ID do pedido foi gerado e salvo", () => {
+          const json = pm.response.json();
+          pm.expect(json.id).to.be.a("number");
+          pm.environment.set("order_id", json.id);
+      });
+    language: text/javascript
+  - type: beforeRequest
+    code: |-
+      pm.sendRequest({
+          url: pm.environment.get("base_url") + "/pet",
+          method: "POST",
+          header: {
+              "Content-Type": "application/json",
+              "api_key": "special-key"
+          },
+          body: {
+              mode: "raw",
+              raw: JSON.stringify({
+                  "id": 4841,
+                  "category": {
+                      "id": 0,
+                      "name": "string"
+                  },
+                  "name": pm.environment.get("nome_pet") || "Rex",
+                  "photoUrls": [
+                      "string"
+                  ],
+                  "tags": [
+                      {
+                          "id": 0,
+                          "name": "string"
+                      }
+                  ],
+                  "status": pm.environment.get("status_pet") || "available"
+              })
+          }
+      }, (err, res) => {
+          if (!err && res.code === 200) {
+              const json = res.json();
+              pm.environment.set("pet_id", json.id);
+              console.log(`Pet recriado com ID: ${json.id}`);
+              pm.environment.set("order_id", 5);
+              pm.environment.set("order_quantity", 2);
+              pm.environment.set("order_status", "placed");
+          } else {
+              console.error("Erro ao recriar o pet:", err || res.json());
+          }
+      });
+    language: text/javascript
+order: 1000

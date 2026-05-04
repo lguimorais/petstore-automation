@@ -1,0 +1,46 @@
+$kind: http-request
+url: "{{base_url}}/pet"
+method: POST
+body:
+  type: json
+  content: |-
+    {
+      "id": 48041,
+      "category": {
+        "id": 0,
+        "name": "string"
+      },
+      "name": "{{nome_pet}}",
+      "photoUrls": [
+        "string"
+      ],
+      "tags": [
+        {
+          "id": 0,
+          "name": "string"
+        }
+      ],
+      "status": "{{status_pet}}"
+    }
+scripts:
+  - type: afterResponse
+    code: |
+      
+
+      pm.test("Resposta tem ID", () => {
+          const json = pm.response.json();
+          pm.expect(json.id).to.be.a("number");
+          pm.environment.set("pet_id", json.id);
+      });
+      pm.test("Nome do pet está correto", () => {
+          const json = pm.response.json();
+          pm.expect(json.name).to.eql(pm.environment.get("nome_pet"));
+      });
+    language: text/javascript
+  - type: beforeRequest
+    code: |-
+      pm.environment.set("nome_pet", "Rex");
+
+      pm.environment.set("status_pet", "available");
+    language: text/javascript
+order: 1000

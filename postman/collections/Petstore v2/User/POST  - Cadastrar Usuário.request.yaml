@@ -1,0 +1,44 @@
+$kind: http-request
+url: "{{base_url}}/user"
+method: POST
+body:
+  type: json
+  content: |-
+    {
+      "id": 8642,
+      "username": "{{username}}",
+      "firstName": "Rex",
+      "lastName": "Silva",
+      "email": "{{email}}",
+      "password": "{{password}}",
+      "phone": "{{phone}}",
+      "userStatus": 1
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Resposta tem ID", () => {  
+          const json = pm.response.json();
+       pm.environment.set("user_id", json.message)
+      });
+      pm.test("Resposta confirma criação do usuário", () => {
+          const json = pm.response.json();
+          pm.expect(json.message).to.be.a("string");
+      });
+
+      pm.test("Variáveis do usuário corretas", () => {
+            const json = pm.response.json();
+          pm.expect(pm.environment.get("user_id")).to.eql(json.message);
+          pm.expect(pm.environment.get("username")).to.eql("rexuser");
+          pm.expect(pm.environment.get("email")).to.eql("rex@email.com");
+          pm.expect(pm.environment.get("phone")).to.eql("86999999999");
+      });
+    language: text/javascript
+  - type: beforeRequest
+    code: |-
+      pm.environment.set("username", "rexuser");
+      pm.environment.set("email", "rex@email.com");
+      pm.environment.set("phone", "86999999999");
+      pm.environment.set("password", "senha123")
+    language: text/javascript
+order: 3000

@@ -1,0 +1,17 @@
+# Use this workspace to collaborate
+workspace:
+  id: 5fcb340e-eb7a-4a64-9a8c-0f3b571b4294
+
+localResources:
+  collections:
+    - ../collections/Petstore v2.postman_collection.json
+  environments:
+    - ../environments/Petstore Env.postman_environment.json
+
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
+cloudResources:
+  collections:
+    ../postman/collections/Petstore v2: 47483218-5c753fb7-eb4d-4d5b-a9b6-d2771065d86b
+  environments:
+    ../postman/environments/Petstore Env.environment.yaml: f86b7b10-9902-57f5-91d7-73c0f26b3047

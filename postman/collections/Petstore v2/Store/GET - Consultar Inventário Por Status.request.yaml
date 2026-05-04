@@ -1,0 +1,28 @@
+$kind: http-request
+url: "{{base_url}}/store/inventory"
+method: GET
+scripts:
+  - type: beforeRequest
+    code: console.log("Consultando inventário de pets por status...");
+    language: text/javascript
+  - type: afterResponse
+    code: |+
+      
+      pm.test("Resposta está em formato JSON válido", () => {
+          pm.response.to.be.json;
+      });
+
+      pm.test("Inventário contém ao menos um status de pet", () => {
+          const json = pm.response.json();
+          pm.expect(Object.keys(json).length).to.be.above(0);
+      });
+
+      pm.test("Todos os valores do inventário são números", () => {
+          const json = pm.response.json();
+          Object.values(json).forEach(valor => {
+              pm.expect(valor).to.be.a("number");
+          });
+      });
+
+    language: text/javascript
+order: 3000

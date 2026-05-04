@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{base_url}}/pet/{{pet_id}}"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |
+      
+
+
+      pm.test("ID do pet está correto", () => {
+          const json = pm.response.json();
+          pm.expect(json.id).to.eql(pm.environment.get("pet_id"));
+      });
+      pm.test("Pet tem nome", () => {
+          const json = pm.response.json();
+          pm.expect(json.name).to.eql(pm.environment.get("nome_pet"));
+      });
+    language: text/javascript
+  - type: beforeRequest
+    code: pm.expect(pm.environment.get("pet_id")).to.not.be.undefined;
+    language: text/javascript
+order: 2000

@@ -1,0 +1,31 @@
+$kind: http-request
+url: "{{base_url}}/user/{{username}}"
+method: GET
+body:
+  type: text
+  content: ""
+scripts:
+  - type: beforeRequest
+    code: pm.expect(pm.environment.get("username")).to.not.be.undefined;
+    language: text/javascript
+  - type: afterResponse
+    code: |-
+      pm.test("Resposta contém todos os campos obrigatórios", () => {
+          const json = pm.response.json();
+          pm.expect(json).to.have.property("id");
+          pm.expect(json).to.have.property("username");
+          pm.expect(json).to.have.property("email");
+          pm.expect(json).to.have.property("phone");
+      });
+
+      pm.test("Username retornado está correto", () => {
+          const json = pm.response.json();
+          pm.expect(json.username).to.eql(pm.environment.get("username"));
+      });
+
+      pm.test("Email retornado está correto", () => {
+          const json = pm.response.json();
+          pm.expect(json.email).to.eql(pm.environment.get("email"));
+      });
+    language: text/javascript
+order: 1000
