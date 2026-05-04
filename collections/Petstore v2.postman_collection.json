@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "ec297e7d-1bfc-4dbd-99bd-4c5a570db70c",
+    "_postman_id": "9a9671d9-87ad-4676-96d0-c734a26c19dd",
     "name": "Petstore v2",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "47483218",
-    "_collection_link": "https://go.postman.co/collection/47483218-ec297e7d-1bfc-4dbd-99bd-4c5a570db70c?source=collection_link"
+    "_collection_link": "https://go.postman.co/collection/47483218-9a9671d9-87ad-4676-96d0-c734a26c19dd?source=collection_link"
   },
   "item": [
     {
@@ -16,10 +16,36 @@
             {
               "listen": "test",
               "script": {
-                "type": "text/javascript",
                 "exec": [
-                  "pm.test(\"Status deve ser 200\", () => {\n    pm.response.to.have.status(200);\n});\nconst json = pm.response.json();\npm.test(\"Pet criado com ID numérico\", () => {\n    pm.expect(json.id).to.be.a(\"number\");\n});\npm.test(\"Nome correto\", () => {\n    pm.expect(json.name).to.eql(\"doggie\");\n});\npm.test(\"Status do pet é available\", () => {\n    pm.expect(json.status).to.eql(\"available\");\n});\npm.collectionVariables.set(\"petId\", json.id);"
-                ]
+                  "",
+                  "",
+                  "pm.test(\"Resposta tem ID\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.id).to.be.a(\"number\");",
+                  "    pm.environment.set(\"pet_id\", json.id);",
+                  "});",
+                  "pm.test(\"Nome do pet está correto\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.name).to.eql(pm.environment.get(\"nome_pet\"));",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.environment.set(\"nome_pet\", \"Rex\");",
+                  "",
+                  "pm.environment.set(\"status_pet\", \"available\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             }
           ],
@@ -28,7 +54,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": 13924924,\n  \"category\": {\n    \"id\": 0,\n    \"name\": \"string\"\n  },\n  \"name\": \"doggie\",\n  \"photoUrls\": [\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"string\"\n    }\n  ],\n  \"status\": \"available\"\n}",
+              "raw": "{\n  \"id\": 48041,\n  \"category\": {\n    \"id\": 0,\n    \"name\": \"string\"\n  },\n  \"name\": \"{{nome_pet}}\",\n  \"photoUrls\": [\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"string\"\n    }\n  ],\n  \"status\": \"{{status_pet}}\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -48,30 +74,45 @@
           "response": []
         },
         {
-          "name": "GET - Buscar Pet",
+          "name": "GET - Buscar Pet Por ID",
           "event": [
             {
               "listen": "test",
               "script": {
-                "type": "text/javascript",
                 "exec": [
-                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));\n"
-                ]
+                  "",
+                  "",
+                  "",
+                  "pm.test(\"ID do pet está correto\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.id).to.eql(pm.environment.get(\"pet_id\"));",
+                  "});",
+                  "pm.test(\"Pet tem nome\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.name).to.eql(pm.environment.get(\"nome_pet\"));",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.expect(pm.environment.get(\"pet_id\")).to.not.be.undefined;"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             }
           ],
           "request": {
             "method": "GET",
             "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
             "url": {
               "raw": "{{base_url}}/pet/{{pet_id}}",
               "host": [
@@ -91,10 +132,30 @@
             {
               "listen": "test",
               "script": {
-                "type": "text/javascript",
                 "exec": [
-                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
-                ]
+                  "",
+                  "",
+                  "pm.test(\"Resposta confirma upload\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.message).to.be.a(\"string\");",
+                  "    pm.expect(json.message).to.include(\"File uploaded\");",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.expect(pm.environment.get(\"pet_id\")).to.not.be.undefined;"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             }
           ],
@@ -106,15 +167,14 @@
               "formdata": [
                 {
                   "key": "additionalMetadata",
-                  "value": "",
+                  "value": "string",
                   "type": "text"
                 },
                 {
-                  "key": "ImagemPet",
+                  "key": "file",
                   "type": "file",
-                  "src": [
-                    "postman-cloud:///1f13fe7f-d0b2-4f80-b0fa-56a7804fded6"
-                  ]
+                  "description": "Imagem do Pet",
+                  "src": "postman-cloud:///1f143fcd-56b3-4ab0-aacd-bc44a5faf0db"
                 }
               ]
             },
@@ -131,23 +191,1078 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "GET - Buscar Pet Por Status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "",
+                  "pm.test(\"Resposta é uma lista\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "pm.test(\"Todos os pets têm status available\", () => {",
+                  "    const json = pm.response.json();",
+                  "    json.forEach(pet => {",
+                  "        pm.expect(pet.status).to.eql(\"available\");",
+                  "    });",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.environment.set(\"status_pet\", \"available\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/pet/findByStatus?status={{status_pet}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet",
+                "findByStatus"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "{{status_pet}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT - Atualizar Pet",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "",
+                  "pm.test(\"Nome foi atualizado\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.name).to.eql(\"Rex Atualizado\");",
+                  "});",
+                  "",
+                  "pm.test(\"Status foi atualizado\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.status).to.eql(\"pending\");",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.environment.set(\"nome_pet\", \"Rex Atualizado\");",
+                  "pm.environment.set(\"status_pet\", \"pending\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 4841,\n  \"category\": {\n    \"id\": 0,\n    \"name\": \"string\"\n  },\n  \"name\": \"{{nome_pet}}\",\n  \"photoUrls\": [\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"string\"\n    }\n  ],\n  \"status\": \"{{status_pet}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/pet",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST - Atualiza Um Pet Na Loja Usando Dados De Formulário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Resposta retornou uma mensagem de confirmação\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.message).to.be.a(\"string\");",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.expect(pm.environment.get(\"pet_id\")).to.not.be.undefined;"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {}
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "name",
+                  "value": "{{nome_pet}}",
+                  "type": "text",
+                  "uuid": "fde90fc8-efa9-4f16-8463-b0b8973016e4"
+                },
+                {
+                  "key": "status",
+                  "value": "available",
+                  "type": "text",
+                  "uuid": "5728e639-9c94-4f56-acef-e4856fa3ab9c"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/pet/{{pet_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet",
+                "{{pet_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE - Deletar um Pet Pelo ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Pet foi deletado com sucesso\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.message).to.be.a(\"string\");",
+                  "});",
+                  "",
+                  "// Limpa a variável após deletar",
+                  "pm.environment.unset(\"pet_id\");",
+                  "",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.expect(pm.environment.get(\"pet_id\")).to.not.be.undefined;"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/pet/{{pet_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet",
+                "{{pet_id}}"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
     {
       "name": "Store",
-      "item": []
+      "item": [
+        {
+          "name": "POST - Criar Pedido De Pet",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "",
+                  "pm.test(\"Resposta está em formato JSON válido\", () => {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"Resposta contém todos os campos obrigatórios\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property(\"id\");",
+                  "    pm.expect(json).to.have.property(\"petId\");",
+                  "    pm.expect(json).to.have.property(\"quantity\");",
+                  "    pm.expect(json).to.have.property(\"status\");",
+                  "    pm.expect(json).to.have.property(\"complete\");",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Status do pedido é 'placed'\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.status).to.eql(\"placed\");",
+                  "});",
+                  "",
+                  "pm.test(\"Quantidade do pedido está correta\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.quantity).to.eql(pm.environment.get(\"order_quantity\"));",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"ID do pedido foi gerado e salvo\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.id).to.be.a(\"number\");",
+                  "    pm.environment.set(\"order_id\", json.id);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.sendRequest({",
+                  "    url: pm.environment.get(\"base_url\") + \"/pet\",",
+                  "    method: \"POST\",",
+                  "    header: {",
+                  "        \"Content-Type\": \"application/json\",",
+                  "        \"api_key\": \"special-key\"",
+                  "    },",
+                  "    body: {",
+                  "        mode: \"raw\",",
+                  "        raw: JSON.stringify({",
+                  "            \"id\": 4841,",
+                  "            \"category\": {",
+                  "                \"id\": 0,",
+                  "                \"name\": \"string\"",
+                  "            },",
+                  "            \"name\": pm.environment.get(\"nome_pet\") || \"Rex\",",
+                  "            \"photoUrls\": [",
+                  "                \"string\"",
+                  "            ],",
+                  "            \"tags\": [",
+                  "                {",
+                  "                    \"id\": 0,",
+                  "                    \"name\": \"string\"",
+                  "                }",
+                  "            ],",
+                  "            \"status\": pm.environment.get(\"status_pet\") || \"available\"",
+                  "        })",
+                  "    }",
+                  "}, (err, res) => {",
+                  "    if (!err && res.code === 200) {",
+                  "        const json = res.json();",
+                  "        pm.environment.set(\"pet_id\", json.id);",
+                  "        console.log(`Pet recriado com ID: ${json.id}`);",
+                  "        pm.environment.set(\"order_id\", 5);",
+                  "        pm.environment.set(\"order_quantity\", 2);",
+                  "        pm.environment.set(\"order_status\", \"placed\");",
+                  "    } else {",
+                  "        console.error(\"Erro ao recriar o pet:\", err || res.json());",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": {{order_id}},\n  \"petId\": {{pet_id}},\n  \"quantity\": {{order_quantity}},\n  \"shipDate\": \"2026-05-02T21:42:25.203+0000\",\n  \"status\": \"{{order_status}}\",\n  \"complete\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/store/order",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "store",
+                "order"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Buscar Pedido Por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Resposta está em formato JSON válido\", () => {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"ID do pedido retornado está correto\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.id).to.eql(Number(pm.environment.get(\"order_id\")));",
+                  "});",
+                  "",
+                  "pm.test(\"Status do pedido é um valor válido\", () => {",
+                  "    const json = pm.response.json();",
+                  "    const statusValidos = [\"placed\", \"approved\", \"delivered\"];",
+                  "    pm.expect(statusValidos).to.include(json.status);",
+                  "});",
+                  "",
+                  "pm.test(\"Quantidade do pedido é um número\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.quantity).to.be.a(\"number\");",
+                  "});",
+                  "",
+                  "pm.test(\"Campo 'complete' é um booleano\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.complete).to.be.a(\"boolean\");",
+                  "});",
+                  "",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const orderId = pm.environment.get(\"order_id\");",
+                  "",
+                  "if (!orderId || orderId < 1 || orderId > 10) {",
+                  "    pm.environment.set(\"order_id\", 5);",
+                  "    console.warn(\"order_id inválido ou fora do intervalo — usando valor padrão: 5\");",
+                  "} else {",
+                  "    console.log(`Buscando pedido de ID: ${orderId}`);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/store/order/{{order_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "store",
+                "order",
+                "{{order_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Consultar Inventário Por Status",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "console.log(\"Consultando inventário de pets por status...\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Resposta está em formato JSON válido\", () => {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"Inventário contém ao menos um status de pet\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(Object.keys(json).length).to.be.above(0);",
+                  "});",
+                  "",
+                  "pm.test(\"Todos os valores do inventário são números\", () => {",
+                  "    const json = pm.response.json();",
+                  "    Object.values(json).forEach(valor => {",
+                  "        pm.expect(valor).to.be.a(\"number\");",
+                  "    });",
+                  "});",
+                  "",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/store/inventory",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "store",
+                "inventory"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE - Cancelar Pedido Por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Resposta confirma que o pedido foi removido\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.message).to.be.a(\"string\");",
+                  "});",
+                  "",
+                  "",
+                  "pm.environment.unset(\"order_id\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const orderId = pm.environment.get(\"order_id\");",
+                  "",
+                  "if (!orderId || orderId <= 0) {",
+                  "    console.warn(\"Nenhum order_id válido encontrado para deletar.\");",
+                  "} else {",
+                  "    console.log(`Deletando pedido de ID: ${orderId}`);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/store/order/{{order_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "store",
+                "order",
+                "{{order_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     },
     {
       "name": "User",
-      "item": []
+      "item": [
+        {
+          "name": "GET - Buscar Usuário Por Nome",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.expect(pm.environment.get(\"username\")).to.not.be.undefined;"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Resposta contém todos os campos obrigatórios\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property(\"id\");",
+                  "    pm.expect(json).to.have.property(\"username\");",
+                  "    pm.expect(json).to.have.property(\"email\");",
+                  "    pm.expect(json).to.have.property(\"phone\");",
+                  "});",
+                  "",
+                  "pm.test(\"Username retornado está correto\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.username).to.eql(pm.environment.get(\"username\"));",
+                  "});",
+                  "",
+                  "pm.test(\"Email retornado está correto\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.email).to.eql(pm.environment.get(\"email\"));",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{base_url}}/user/{{username}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "{{username}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT - Atualizar Usuário",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.expect(pm.environment.get(\"username\")).to.not.be.undefined;",
+                  "",
+                  "pm.environment.set(\"username\", \"rexuser_atualizado\");",
+                  "pm.environment.set(\"email\", \"rex_atualizado@email.com\");",
+                  "pm.environment.set(\"phone\", \"86988888888\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Resposta confirma atualização do usuário\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.message).to.be.a(\"string\");",
+                  "});",
+                  "",
+                  "pm.test(\"Variáveis foram atualizadas no environment\", () => {",
+                  "    pm.expect(pm.environment.get(\"username\")).to.eql(\"rexuser_atualizado\");",
+                  "    pm.expect(pm.environment.get(\"email\")).to.eql(\"rex_atualizado@email.com\");",
+                  "    pm.expect(pm.environment.get(\"phone\")).to.eql(\"86988888888\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": {{user_id}},\n  \"username\": \"{{username}}\",\n  \"firstName\": \"Rex\",\n  \"lastName\": \"Silva\",\n  \"email\": \"{{email}}\",\n  \"password\": \"novaSenha123\",\n  \"phone\": \"{{phone}}\",\n  \"userStatus\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/user/{{username}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "{{username}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST  - Cadastrar Usuário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Resposta tem ID\", () => {  ",
+                  "    const json = pm.response.json();",
+                  " pm.environment.set(\"user_id\", json.message)",
+                  "});",
+                  "pm.test(\"Resposta confirma criação do usuário\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.message).to.be.a(\"string\");",
+                  "});",
+                  "",
+                  "pm.test(\"Variáveis do usuário corretas\", () => {",
+                  "      const json = pm.response.json();",
+                  "    pm.expect(pm.environment.get(\"user_id\")).to.eql(json.message);",
+                  "    pm.expect(pm.environment.get(\"username\")).to.eql(\"rexuser\");",
+                  "    pm.expect(pm.environment.get(\"email\")).to.eql(\"rex@email.com\");",
+                  "    pm.expect(pm.environment.get(\"phone\")).to.eql(\"86999999999\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.environment.set(\"username\", \"rexuser\");",
+                  "pm.environment.set(\"email\", \"rex@email.com\");",
+                  "pm.environment.set(\"phone\", \"86999999999\");",
+                  "pm.environment.set(\"password\", \"senha123\")"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 8642,\n  \"username\": \"{{username}}\",\n  \"firstName\": \"Rex\",\n  \"lastName\": \"Silva\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"phone\": \"{{phone}}\",\n  \"userStatus\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Realizar Login Do Usuário",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.expect(pm.environment.get(\"username\")).to.not.be.undefined;",
+                  "pm.expect(pm.environment.get(\"password\")).to.not.be.undefined;"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Resposta confirma login com mensagem de sessão\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.message).to.include(\"logged in user session\");",
+                  "});",
+                  "",
+                  "pm.test(\"Header X-Rate-Limit está presente\", () => {",
+                  "    pm.expect(pm.response.headers.get(\"X-Rate-Limit\")).to.not.be.null;",
+                  "});",
+                  "",
+                  "pm.test(\"Header X-Expires-After está presente\", () => {",
+                  "    pm.expect(pm.response.headers.get(\"X-Expires-After\")).to.not.be.null;",
+                  "});",
+                  "",
+                  "pm.test(\"Sessão do usuário foi salva\", () => {",
+                  "    const json = pm.response.json();",
+                  "    const sessao = json.message.split(\":\")[1];",
+                  "    pm.environment.set(\"user_session\", sessao);",
+                  "    console.log(`Sessão salva: ${sessao}`);",
+                  "    pm.expect(sessao).to.be.a(\"string\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/user/login?username={{username}}&password={{password}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "login"
+              ],
+              "query": [
+                {
+                  "key": "username",
+                  "value": "{{username}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Realizar Logout Do Usuário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Resposta confirma logout\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.message).to.be.a(\"string\");",
+                  "});",
+                  "",
+                  "pm.test(\"Sessão do usuário foi removida do environment\", () => {",
+                  "    pm.environment.unset(\"user_session\");",
+                  "    pm.expect(pm.environment.get(\"user_session\")).to.be.undefined;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/user/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST - Criar Usuários Em Lote (Array)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Resposta confirma criação da lista de usuários\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.message).to.be.a(\"string\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n    {\n        \"id\": {{user_id}},\n        \"username\": \"{{username}}\",\n        \"firstName\": \"Rex\",\n        \"lastName\": \"Silva\",\n        \"email\": \"{{email}}\",\n        \"password\": \"{{password}}\",\n        \"phone\": \"{{phone}}\",\n        \"userStatus\": 1\n    }\n]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/user/createWithArray",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "createWithArray"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST - Criar Usuários Em Lote (Lista)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Resposta confirma criação da lista de usuários\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.message).to.be.a(\"string\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n    {\n        \"id\": {{user_id}},\n        \"username\": \"{{username}}\",\n        \"firstName\": \"Rex\",\n        \"lastName\": \"Silva\",\n        \"email\": \"{{email}}\",\n        \"password\": \"{{password}}\",\n        \"phone\": \"{{phone}}\",\n        \"userStatus\": 1\n    }\n]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/user/createWithList",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "createWithList"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE - Remover Usuário",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.expect(pm.environment.get(\"username\")).to.not.be.undefined;"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "",
+                  "pm.test(\"Variáveis do usuário foram limpas\", () => {",
+                  "    pm.environment.unset(\"user_id\");",
+                  "    pm.environment.unset(\"username\");",
+                  "    pm.environment.unset(\"email\");",
+                  "    pm.environment.unset(\"phone\");",
+                  "    pm.environment.unset(\"username_original\");",
+                  "    console.log(\"Variáveis do usuário removidas.\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/user/{{username}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "{{username}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ],
-  "variable": [
+  "event": [
     {
-      "key": "petId",
-      "value": "",
-      "type": "string"
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "pm.test(\"Status code é 200\", () => {",
+          "    pm.response.to.have.status(200);",
+          "});",
+          "pm.test(\"Tempo de resposta é aceitável (menos de 500ms)\", () => {",
+          "    pm.expect(pm.response.responseTime).to.be.below(500);",
+          "});"
+        ]
+      }
     }
   ]
 }

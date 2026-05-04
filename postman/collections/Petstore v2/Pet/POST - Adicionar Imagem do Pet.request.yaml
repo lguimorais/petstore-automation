@@ -1,4 +1,5 @@
 $kind: http-request
+name: POST - Adicionar Imagem do Pet
 url: "{{base_url}}/pet/{{pet_id}}/uploadImage"
 method: POST
 body:
@@ -14,4 +15,4 @@ scripts:
   - type: afterResponse
     code: pm.test("Status 200", () => pm.response.to.have.status(200));
     language: text/javascript
-order: 3000
+order: 877
