@@ -42,7 +42,7 @@ jobs:
               return v;
             });
 
-            fs.writeFileSync('./environments/Petstore Env.postman_environment.json', JSON.stringify(env, null, 2));
+            fs.writeFileSync('./environments/Petstore_Env.postman_environment.json', JSON.stringify(env, null, 2));
             console.log('✅ Variáveis injetadas com sucesso');
           "
 
