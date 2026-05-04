@@ -1,0 +1,103 @@
+name: Petstore API Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Ambiente de execução'
+        required: true
+        default: 'petstore-env'
+        type: choice
+        options:
+          - petstore-env
+
+jobs:
+  run-api-tests:
+    name: Executar Testes da API Petstore
+    runs-on: ubuntu-latest
+
+    steps:
+      - name:  Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name:  Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name:  Instalar Newman e Reporter HTML
+        run: |
+          npm install -g newman
+          npm install -g newman-reporter-htmlextra
+
+      - name:  Injetar variáveis sensíveis no environment
+        run: |
+          node -e "
+            const fs = require('fs');
+            const env = JSON.parse(fs.readFileSync('./environments/Petstore_Env_postman_environment.json', 'utf8'));
+
+            env.values = env.values.map(v => {
+              if (v.key === 'special-key') v.value = '${{ secrets.PETSTORE_API_KEY }}';
+              if (v.key === 'base_url')    v.value = 'https://petstore.swagger.io/v2';
+              return v;
+            });
+
+            fs.writeFileSync('./environments/Petstore_Env_postman_environment.json', JSON.stringify(env, null, 2));
+            console.log('✅ Variáveis injetadas com sucesso');
+          "
+
+      - name:  Executar testes — Pasta Pet
+        run: |
+          newman run ./collections/Petstore_v2_postman_collection.json \
+            --environment ./environments/Petstore_Env_postman_environment.json \
+            --folder "Pet" \
+            --reporters cli,htmlextra \
+            --reporter-htmlextra-export ./reports/report-pet.html \
+            --reporter-htmlextra-title "Petstore — Pet Tests" \
+            --reporter-htmlextra-browserTitle "Pet Tests" \
+            --color on \
+            --bail
+        continue-on-error: true
+
+      - name:  Executar testes — Pasta Store
+        run: |
+          newman run ./collections/Petstore_v2_postman_collection.json \
+            --environment ./environments/Petstore_Env_postman_environment.json \
+            --folder "Store" \
+            --reporters cli,htmlextra \
+            --reporter-htmlextra-export ./reports/report-store.html \
+            --reporter-htmlextra-title "Petstore — Store Tests" \
+            --reporter-htmlextra-browserTitle "Store Tests" \
+            --color on \
+            --bail
+        continue-on-error: true
+
+      - name:  Executar testes — Pasta User
+        run: |
+          newman run ./collections/Petstore_v2_postman_collection.json \
+            --environment ./environments/Petstore_Env_postman_environment.json \
+            --folder "User" \
+            --reporters cli,htmlextra \
+            --reporter-htmlextra-export ./reports/report-user.html \
+            --reporter-htmlextra-title "Petstore — User Tests" \
+            --reporter-htmlextra-browserTitle "User Tests" \
+            --color on \
+            --bail
+        continue-on-error: true
+
+      - name:  Publicar relatórios HTML como artefatos
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: relatorios-petstore-${{ github.run_number }}
+          path: ./reports/
+          retention-days: 30
+
+      - name: Pipeline finalizada
+        if: always()
+        run: |
+          echo "=========================================="
+          echo "   Petstore API Tests — Concluído"
+          echo "   Relatórios disponíveis nos Artifacts"
+          echo "   Run number: ${{ github.run_number }}"
+          echo "=========================================="
