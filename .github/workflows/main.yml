@@ -49,7 +49,7 @@ jobs:
       - name:  Executar testes — Pasta Pet
         run: |
           newman run ./collections/Petstore v2.postman_collection.json \
-            --environment ./environments/Petstore Env.postman_environment.json \
+            --environment "./environments/Petstore Env.postman_environment.json" \
             --folder "Pet" \
             --reporters cli,htmlextra \
             --reporter-htmlextra-export ./reports/report-pet.html \
@@ -62,7 +62,7 @@ jobs:
       - name:  Executar testes — Pasta Store
         run: |
           newman run ./collections/Petstore v2.postman_collection.json \
-            --environment ./environments/Petstore Env.postman_environment.json \
+            --environment "./environments/Petstore Env.postman_environment.json" \
             --folder "Store" \
             --reporters cli,htmlextra \
             --reporter-htmlextra-export ./reports/report-store.html \
@@ -75,7 +75,7 @@ jobs:
       - name:  Executar testes — Pasta User
         run: |
           newman run ./collections/Petstore v2.postman_collection.json \
-            --environment ./environments/Petstore Env.postman_environment.json \
+            --environment "./environments/Petstore Env.postman_environment.json" \
             --folder "User" \
             --reporters cli,htmlextra \
             --reporter-htmlextra-export ./reports/report-user.html \
