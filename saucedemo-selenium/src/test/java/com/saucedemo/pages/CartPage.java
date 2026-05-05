@@ -22,6 +22,7 @@ public class CartPage {
     public CheckoutPage irParaCheckout() {
         wait.until(ExpectedConditions.elementToBeClickable(botaoCheckout))
                 .click();
+        wait.until(ExpectedConditions.urlContains("checkout-step-one"));
         return new CheckoutPage(driver);
     }
 
