@@ -54,7 +54,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": 48041,\n  \"category\": {\n    \"id\": 0,\n    \"name\": \"string\"\n  },\n  \"name\": \"{{nome_pet}}\",\n  \"photoUrls\": [\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"string\"\n    }\n  ],\n  \"status\": \"{{status_pet}}\"\n}",
+              "raw": "{\n  \"id\": 4809,\n  \"category\": {\n    \"id\": 0,\n    \"name\": \"string\"\n  },\n  \"name\": \"{{nome_pet}}\",\n  \"photoUrls\": [\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"string\"\n    }\n  ],\n  \"status\": \"{{status_pet}}\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -757,6 +757,74 @@
       "name": "User",
       "item": [
         {
+          "name": "POST  - Cadastrar Usuário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Resposta tem ID\", () => {  ",
+                  "    const json = pm.response.json();",
+                  " pm.environment.set(\"user_id\", json.message)",
+                  "});",
+                  "pm.test(\"Resposta confirma criação do usuário\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.message).to.be.a(\"string\");",
+                  "});",
+                  "",
+                  "pm.test(\"Variáveis do usuário corretas\", () => {",
+                  "      const json = pm.response.json();",
+                  "    pm.expect(pm.environment.get(\"user_id\")).to.eql(json.message);",
+                  "    pm.expect(pm.environment.get(\"username\")).to.eql(\"rexuser\");",
+                  "    pm.expect(pm.environment.get(\"email\")).to.eql(\"rex@email.com\");",
+                  "    pm.expect(pm.environment.get(\"phone\")).to.eql(\"86999999999\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.environment.set(\"username\", \"rexuser\");",
+                  "pm.environment.set(\"email\", \"rex@email.com\");",
+                  "pm.environment.set(\"phone\", \"86999999999\");",
+                  "pm.environment.set(\"password\", \"senha123\")"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 8642,\n  \"username\": \"{{username}}\",\n  \"firstName\": \"Rex\",\n  \"lastName\": \"Silva\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"phone\": \"{{phone}}\",\n  \"userStatus\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "GET - Buscar Usuário Por Nome",
           "event": [
             {
@@ -880,74 +948,6 @@
               "path": [
                 "user",
                 "{{username}}"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "POST  - Cadastrar Usuário",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Resposta tem ID\", () => {  ",
-                  "    const json = pm.response.json();",
-                  " pm.environment.set(\"user_id\", json.message)",
-                  "});",
-                  "pm.test(\"Resposta confirma criação do usuário\", () => {",
-                  "    const json = pm.response.json();",
-                  "    pm.expect(json.message).to.be.a(\"string\");",
-                  "});",
-                  "",
-                  "pm.test(\"Variáveis do usuário corretas\", () => {",
-                  "      const json = pm.response.json();",
-                  "    pm.expect(pm.environment.get(\"user_id\")).to.eql(json.message);",
-                  "    pm.expect(pm.environment.get(\"username\")).to.eql(\"rexuser\");",
-                  "    pm.expect(pm.environment.get(\"email\")).to.eql(\"rex@email.com\");",
-                  "    pm.expect(pm.environment.get(\"phone\")).to.eql(\"86999999999\");",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            },
-            {
-              "listen": "prerequest",
-              "script": {
-                "exec": [
-                  "pm.environment.set(\"username\", \"rexuser\");",
-                  "pm.environment.set(\"email\", \"rex@email.com\");",
-                  "pm.environment.set(\"phone\", \"86999999999\");",
-                  "pm.environment.set(\"password\", \"senha123\")"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"id\": 8642,\n  \"username\": \"{{username}}\",\n  \"firstName\": \"Rex\",\n  \"lastName\": \"Silva\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"phone\": \"{{phone}}\",\n  \"userStatus\": 1\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/user",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "user"
               ]
             }
           },
