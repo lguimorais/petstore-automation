@@ -1,21 +1,29 @@
 package com.saucedemo.tests;
+
 import com.saucedemo.base.BaseTest;
-import com.saucedemo.pages.LoginPage;
+import com.saucedemo.pages.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class CompraE2ETest extends BaseTest {
-    @Test
-    public void testarLogin() {
+    @Test(description = "fluxo completo: Login ,carrinho e compra ")
+    public void deveFinalizarCompraCom2Produtos() {
         LoginPage login = new LoginPage(getDriver());
         login.abrirPagina();
-        login.fazerLogin("standard_user", "secret_sauce");
+        InventoryPage inentario = login.fazerLogin("standard_user", "secret_sauce");
+        inentario.adicionarProdutoAoCarrinho("Sauce labs Backpack");
+        inentario.adicionarProdutoAoCarrinho("Sauce Labs Bike Light");
 
-        // Valida que saiu da tela de login (URL mudou)
-        String urlAtual = getDriver().getCurrentUrl();
-        Assert.assertTrue(urlAtual.contains("inventory"),
-                "Login falhou! URL atual: " + urlAtual);
+        CartPage carrinho = inentario.irParaCarrinho();
 
-        System.out.println("✅ Login OK — URL: " + urlAtual);
+        CheckoutPage checkout = carrinho.irParaCheckout();
+
+        checkout.preencherInformacoes("luis", "Guilherme", "64093000");
+        checkout.clicarContinuar();
+        ConfirmPage confimacao = checkout.finalizarCompra();
+        Assert.assertTrue(confimacao.compraFinalizada(), "A mensagem de cofirmação não apareceu");
+
     }
+
+
 }

@@ -10,7 +10,7 @@ public class InventoryPage {
 
 
     private By botaoAddProduto(String nomeProduto) {
-        String seletor = String.format("[data-test= 'add-to-cart-%s']", nomeProduto.toLowerCase().replace(" ", "-"));
+        String seletor = String.format("[data-test='add-to-cart-%s']", nomeProduto.toLowerCase().replace(" ", "-"));
         return By.cssSelector(seletor);
         }
 
