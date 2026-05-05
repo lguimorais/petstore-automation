@@ -31,7 +31,7 @@ public class LoginPage {
         driver.findElement(botaoLogin).click();
     }
 
-    public InventoryPage FazerLogin(String usuario, String senha) {
+    public InventoryPage fazerLogin(String usuario, String senha) {
         digitarUsuario(usuario);
         digitarSenha(senha);
         clicarLogin();
