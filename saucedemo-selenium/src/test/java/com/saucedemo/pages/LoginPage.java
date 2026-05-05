@@ -13,27 +13,33 @@ public class LoginPage {
     public LoginPage(WebDriver driver) {
         this.driver = driver;
     }
-    public void abrirPagina(){
+
+    public void abrirPagina() {
         driver.get("https://www.saucedemo.com/");
     }
-    public void digitarUsuario(String usuario){
+
+    public void digitarUsuario(String usuario) {
         driver.findElement(campoUsuario).clear();
         driver.findElement(campoUsuario).sendKeys(usuario);
     }
-    public void digitarSenha(String senha){
+
+    public void digitarSenha(String senha) {
         driver.findElement(campoSenha).sendKeys(senha);
     }
-    public void clicarLogin(){
+
+    public void clicarLogin() {
         driver.findElement(botaoLogin).click();
     }
-    public InventoryPage FazerLogin(String usuario , String senha){
+
+    public InventoryPage FazerLogin(String usuario, String senha) {
         digitarUsuario(usuario);
         digitarSenha(senha);
         clicarLogin();
         return new InventoryPage(driver);
 
     }
-    public String obterMensagemErro(){
+
+    public String obterMensagemErro() {
         return driver.findElement(mensagemErro).getText();
     }
 }

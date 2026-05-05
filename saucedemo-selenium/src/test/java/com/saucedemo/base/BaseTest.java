@@ -28,9 +28,10 @@ public class BaseTest {
         getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
     }
+
     @AfterMethod
-    public void tearDown(){
-        if (getDriver() !=null){
+    public void tearDown() {
+        if (getDriver() != null) {
             getDriver().quit();
             driver.remove();
         }
