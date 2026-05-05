@@ -2,6 +2,7 @@ package com.saucedemo.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -20,6 +21,14 @@ public class CartPage {
     }
 
     public CheckoutPage irParaCheckout() {
+        WebElement btn = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(botaoCheckout)
+        );
+
+        // força scroll até o elemento (sem JS pesado)
+        new org.openqa.selenium.interactions.Actions(driver)
+                .moveToElement(btn)
+                .perform();
         wait.until(ExpectedConditions.elementToBeClickable(botaoCheckout))
                 .click();
         wait.until(ExpectedConditions.urlContains("checkout-step-one"));
