@@ -1,0 +1,47 @@
+# .github/workflows/ci.yml
+name: Selenium E2E Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Baixa o código do repositório
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      # 2. Configura o Java 17
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # 3. Cache do Maven (evita baixar dependências toda vez)
+      - name: Cache Maven
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+
+      # 4. Instala Google Chrome
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      # 5. Roda os testes Selenium (headless via ChromeOptions)
+      - name: Rodar testes E2E
+        run: mvn test --no-transfer-progress
+
+      # 6. Publica relatório de testes (mesmo se falhar)
+      - name: Publicar relatório TestNG
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: relatorio-testes
+          path: target/surefire-reports/
