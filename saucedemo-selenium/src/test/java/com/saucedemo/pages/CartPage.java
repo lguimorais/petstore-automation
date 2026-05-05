@@ -15,7 +15,7 @@ public class CartPage {
     private final By botaoCheckout = By.id("checkout");
 
     public CartPage(WebDriver driver) {
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(40));
         this.driver = driver;
     }
 

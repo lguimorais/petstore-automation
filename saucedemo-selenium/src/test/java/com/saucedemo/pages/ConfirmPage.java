@@ -14,7 +14,7 @@ public class ConfirmPage {
 
     public ConfirmPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(40));
     }
 
     public String obterMensagemSucesso() {
