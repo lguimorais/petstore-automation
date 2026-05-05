@@ -44,4 +44,4 @@ jobs:
         if: always()
         with:
           name: relatorio-testes
-          path: target/surefire-reports/
+          path: saucedemo-selenium/target/surefire-reports/
