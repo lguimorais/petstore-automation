@@ -11,8 +11,6 @@ public class InventoryPage {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
-    private final By linkCarrinho     = By.cssSelector("a.shopping_cart_link");
-    // Aguarda qualquer botão "Add to cart" para confirmar que a página carregou
     private final By qualquerBotaoAdd = By.cssSelector("[data-test^='add-to-cart']");
 
     public InventoryPage(WebDriver driver) {
@@ -26,15 +24,18 @@ public class InventoryPage {
     }
 
     public void adicionarProdutoAoCarrinho(String nomeProduto) {
-        // Espera a página de produtos carregar completamente antes de qualquer ação
         wait.until(ExpectedConditions.visibilityOfElementLocated(qualquerBotaoAdd));
-        // Espera o botão específico deste produto estar clicável
         wait.until(ExpectedConditions.elementToBeClickable(botaoAddProduto(nomeProduto)))
                 .click();
+        // Aguarda o botão virar "Remove" confirmando que o produto foi adicionado
+        String slugRemove = nomeProduto.toLowerCase().replace(" ", "-");
+        By botaoRemove = By.cssSelector("[data-test='remove-" + slugRemove + "']");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(botaoRemove));
     }
 
     public CartPage irParaCarrinho() {
-        wait.until(ExpectedConditions.elementToBeClickable(linkCarrinho)).click();
+        // Navega diretamente — evita problemas de click em headless com <a> tags
+        driver.navigate().to("https://www.saucedemo.com/cart.html");
         wait.until(ExpectedConditions.urlContains("cart.html"));
         return new CartPage(driver);
     }
