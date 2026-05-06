@@ -20,9 +20,6 @@ public class CheckoutPage {
     private final By botaoContinuar = By.id("continue");
     private final By botaoFinalizar = By.id("finish");
 
-    // Aguarda o formulário inteiro estar visível — mais confiável que aguardar campo por campo
-    private final By formulario = By.cssSelector(".checkout_info");
-
     public CheckoutPage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
@@ -40,10 +37,8 @@ public class CheckoutPage {
     }
 
     public void preencherInformacoes(String nome, String sobrenome, String cep) {
-        // Espera o FORMULÁRIO inteiro estar visível antes de qualquer campo
-        // Isso garante que o React terminou de renderizar a página
-        wait.until(ExpectedConditions.visibilityOfElementLocated(formulario));
-
+        // URL já garantida pelo CartPage — espera o campo aparecer
+        wait.until(ExpectedConditions.visibilityOfElementLocated(campoNome));
         clicarEDigitar(campoNome, nome);
         clicarEDigitar(campoSobrenome, sobrenome);
         clicarEDigitar(campoCep, cep);

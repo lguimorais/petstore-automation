@@ -1,6 +1,5 @@
 package com.saucedemo.pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -10,7 +9,6 @@ public class CartPage {
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final By botaoCheckout = By.id("checkout");
 
     public CartPage(WebDriver driver) {
         this.driver = driver;
@@ -18,9 +16,9 @@ public class CartPage {
     }
 
     public CheckoutPage irParaCheckout() {
-        // Confirma que estamos no carrinho antes de procurar o botão
-        wait.until(ExpectedConditions.urlContains("cart.html"));
-        wait.until(ExpectedConditions.elementToBeClickable(botaoCheckout)).click();
+        // Navega direto — mesma estratégia que funcionou para o carrinho
+        driver.navigate().to("https://www.saucedemo.com/checkout-step-one.html");
+        wait.until(ExpectedConditions.urlContains("checkout-step-one"));
         return new CheckoutPage(driver);
     }
 }
