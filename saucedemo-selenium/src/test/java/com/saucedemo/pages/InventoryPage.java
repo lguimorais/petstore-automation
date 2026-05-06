@@ -11,7 +11,7 @@ public class InventoryPage {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
-    private final By iconeCarrinho = By.id("shopping_cart_container");
+    private final By linkCarrinho     = By.cssSelector("a.shopping_cart_link");
     // Aguarda qualquer botão "Add to cart" para confirmar que a página carregou
     private final By qualquerBotaoAdd = By.cssSelector("[data-test^='add-to-cart']");
 
@@ -34,7 +34,7 @@ public class InventoryPage {
     }
 
     public CartPage irParaCarrinho() {
-        wait.until(ExpectedConditions.elementToBeClickable(iconeCarrinho)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(linkCarrinho)).click();
         wait.until(ExpectedConditions.urlContains("cart.html"));
         return new CartPage(driver);
     }
