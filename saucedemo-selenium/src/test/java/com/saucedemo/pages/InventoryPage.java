@@ -35,6 +35,7 @@ public class InventoryPage {
 
     public CartPage irParaCarrinho() {
         wait.until(ExpectedConditions.elementToBeClickable(iconeCarrinho)).click();
+        wait.until(ExpectedConditions.urlContains("cart.html"));
         return new CartPage(driver);
     }
 }
