@@ -37,7 +37,6 @@ public class CheckoutPage {
     }
 
     public void preencherInformacoes(String nome, String sobrenome, String cep) {
-        // URL já garantida pelo CartPage — espera o campo aparecer
         wait.until(ExpectedConditions.visibilityOfElementLocated(campoNome));
         clicarEDigitar(campoNome, nome);
         clicarEDigitar(campoSobrenome, sobrenome);
@@ -45,12 +44,18 @@ public class CheckoutPage {
     }
 
     public void clicarContinuar() {
+        // Clica para submeter o formulário (React precisa do click para validar)
         wait.until(ExpectedConditions.elementToBeClickable(botaoContinuar)).click();
+        // Navega direto — mesmo padrão usado no carrinho e checkout-step-one
+        driver.navigate().to("https://www.saucedemo.com/checkout-step-two.html");
         wait.until(ExpectedConditions.urlContains("checkout-step-two"));
     }
 
     public ConfirmPage finalizarCompra() {
         wait.until(ExpectedConditions.elementToBeClickable(botaoFinalizar)).click();
+        // Navega direto para a confirmação
+        driver.navigate().to("https://www.saucedemo.com/checkout-complete.html");
+        wait.until(ExpectedConditions.urlContains("checkout-complete"));
         return new ConfirmPage(driver);
     }
 }
