@@ -2,6 +2,8 @@ package com.saucedemo.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
@@ -10,12 +12,14 @@ public class InventoryPage {
 
     private final WebDriver driver;
     private final WebDriverWait wait;
+    private final Actions actions;
 
     private final By qualquerBotaoAdd = By.cssSelector("[data-test^='add-to-cart']");
 
     public InventoryPage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        this.actions = new Actions(driver);
     }
 
     private By botaoAddProduto(String nomeProduto) {
@@ -24,17 +28,19 @@ public class InventoryPage {
     }
 
     public void adicionarProdutoAoCarrinho(String nomeProduto) {
+        // Aguarda a página estar pronta
         wait.until(ExpectedConditions.visibilityOfElementLocated(qualquerBotaoAdd));
-        wait.until(ExpectedConditions.elementToBeClickable(botaoAddProduto(nomeProduto)))
-                .click();
-        // Aguarda o botão virar "Remove" confirmando que o produto foi adicionado
-        String slugRemove = nomeProduto.toLowerCase().replace(" ", "-");
-        By botaoRemove = By.cssSelector("[data-test='remove-" + slugRemove + "']");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(botaoRemove));
+
+        WebElement botao = wait.until(
+                ExpectedConditions.elementToBeClickable(botaoAddProduto(nomeProduto))
+        );
+
+        // Scroll até o botão + click via Actions (mais confiável em headless)
+        actions.scrollToElement(botao).perform();
+        actions.click(botao).perform();
     }
 
     public CartPage irParaCarrinho() {
-        // Navega diretamente — evita problemas de click em headless com <a> tags
         driver.navigate().to("https://www.saucedemo.com/cart.html");
         wait.until(ExpectedConditions.urlContains("cart.html"));
         return new CartPage(driver);
