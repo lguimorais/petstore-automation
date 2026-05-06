@@ -9,6 +9,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: saucedemo-selenium
 
     steps:
       - name: Checkout código
@@ -26,11 +29,8 @@ jobs:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
 
-      - name: Setup Chrome
-        uses: browser-actions/setup-chrome@v1
-
+      # Sem setup-chrome — WebDriverManager detecta e baixa o driver correto sozinho
       - name: Rodar testes E2E
-        working-directory: saucedemo-selenium   # ← linha que faltava
         run: mvn test --no-transfer-progress
 
       - name: Publicar relatório TestNG
@@ -38,4 +38,4 @@ jobs:
         if: always()
         with:
           name: relatorio-testes
-          path: saucedemo-selenium/target/surefire-reports/  # ← path corrigido também
+          path: saucedemo-selenium/target/surefire-reports/
