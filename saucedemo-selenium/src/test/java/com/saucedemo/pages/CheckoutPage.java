@@ -20,13 +20,12 @@ public class CheckoutPage {
 
     public CheckoutPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(40));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     }
 
     private void clicarEDigitar(By locator, String texto) {
-        // Espera o campo estar visível, clica para dar foco real, depois digita
         WebElement campo = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(locator)
+                ExpectedConditions.elementToBeClickable(locator)
         );
         campo.click();
         campo.clear();
@@ -34,9 +33,8 @@ public class CheckoutPage {
     }
 
     public void preencherInformacoes(String nome, String sobrenome, String cep) {
-        // Garante que estamos na página certa
-        wait.until(ExpectedConditions.urlContains("checkout-step-one"));
-
+        // Espera o primeiro campo estar pronto — garante que a página carregou
+        wait.until(ExpectedConditions.elementToBeClickable(campoNome));
         clicarEDigitar(campoNome, nome);
         clicarEDigitar(campoSobrenome, sobrenome);
         clicarEDigitar(campoCep, cep);
